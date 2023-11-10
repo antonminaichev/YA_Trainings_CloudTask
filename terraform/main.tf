@@ -84,7 +84,7 @@ resource "yandex_compute_instance_group" "catgpt" {
     network_interface {
       network_id = data.yandex_vpc_network.foo.id
       subnet_ids = ["${data.yandex_vpc_subnet.foo.id}"]
-      nat        = true
+     # nat        = true
     }
     boot_disk {
       initialize_params {
@@ -114,5 +114,52 @@ resource "yandex_compute_instance_group" "catgpt" {
     max_creating    = 1
     max_expansion   = 1
     max_deleting    = 1
+  }
+}
+
+resource "yandex_lb_target_group" "foo" {
+  name      = "catgpt-nb-group"
+  target {
+    subnet_id = "${data.yandex_vpc_subnet.foo.id}"
+    address   = "${yandex_compute_instance_group.catgpt.instances[0].network_interface[0].ip_address}"
+  }
+  target {
+    subnet_id = "${data.yandex_vpc_subnet.foo.id}"
+    address   = "${yandex_compute_instance_group.catgpt.instances[1].network_interface[0].ip_address}"
+  }
+}
+
+
+resource "yandex_lb_network_load_balancer" "foo" {
+  name = "catgpt-nlb"
+  listener {
+    name = "catgpt-network-balancer"
+    port = 8080
+    external_address_spec {}
+  }
+  attached_target_group {
+    target_group_id = "${yandex_lb_target_group.foo.id}"
+    healthcheck {
+      name = "http"
+      http_options {
+        port = 8080
+        path = "/ping"
+      }
+    }
+  }
+}
+
+resource "yandex_vpc_gateway" "nat_gateway" {
+  name = "test-gateway"
+  shared_egress_gateway {}
+}
+
+resource "yandex_vpc_route_table" "rt" {
+  name       = "test-route-table"
+  network_id = "enp9dckkdc3d2bctujsl"
+
+  static_route {
+    destination_prefix = "0.0.0.0/0"
+    gateway_id         = yandex_vpc_gateway.nat_gateway.id
   }
 }
