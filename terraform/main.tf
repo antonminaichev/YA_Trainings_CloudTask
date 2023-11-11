@@ -48,7 +48,7 @@ data "yandex_compute_image" "coi" {
 }
 
 resource "yandex_iam_service_account" "ig-sa" {
-  name        = "ig-sa"
+  name        = "ig-sa-olada666"
   description = "service account to manage IG"
 }
 
@@ -84,7 +84,7 @@ resource "yandex_compute_instance_group" "catgpt" {
     network_interface {
       network_id = data.yandex_vpc_network.foo.id
       subnet_ids = ["${data.yandex_vpc_subnet.foo.id}"]
-     # nat        = true
+      #nat        = true
     }
     boot_disk {
       initialize_params {
