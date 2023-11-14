@@ -1,0 +1,11 @@
+{
+         "descriptors": "4",
+         "mem_proc": "14676 kB",
+         "exe_path": "/usr/local/bin/python3.12",
+         "cpus_number": "4",
+         "cpu_name": "12th Gen Intel(R) Core(TM) i5-12400F",
+         "mem_size": "4G",
+         "disk_size": "lsblk: /dev/sda: not a block device",
+         "gb_cgroup": 2.0,
+         "cpus_cgroup": 2.0
+}

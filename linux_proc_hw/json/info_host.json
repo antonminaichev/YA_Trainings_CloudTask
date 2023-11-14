@@ -1,0 +1,9 @@
+{
+       "descriptors": "4",
+       "mem_proc": "10288 kB",
+       "exe_path": "/usr/bin/python3.8",
+       "cpus_number": "4",
+       "cpu_name": "12th Gen Intel(R) Core(TM) i5-12400F",
+       "mem_size": "4G",
+       "disk_size": "30G"
+}
